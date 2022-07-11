@@ -16,9 +16,13 @@ module.exports= class Convert2 {
     ParseLine() {
         if (this.index >= this.lines.length) return null;
         const line = this.lines[this.index++].replace(/##.*/g,'');
+        let Comment = "";
+        let HasComment = this.lines[this.index-1].indexOf("##");
+        if( HasComment >=0){
+             Comment =  this.lines[this.index-1].slice(HasComment);
+        }
 
-
-        return {Line: line, Depth: this.CountWhiteSpace(line) / 2}
+        return {Line: line, Depth: this.CountWhiteSpace(line) / 2,Comment}
 
     }
 }
