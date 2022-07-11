@@ -7,7 +7,7 @@ export class ShowStatement extends Statement {
         let parser;
         try {
             parser = parse(this.Line.trim(), {
-                record_delimiter: ' '
+                record_delimiter: ' ', escape: '\\'
             }).map(a => a[0]);
         } catch (e) {
             //  throw e

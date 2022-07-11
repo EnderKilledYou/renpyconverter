@@ -2,6 +2,7 @@ import {StatementBlock} from "./statementBlock.mjs";
 import {LabelStatement} from "./labelStatement.mjs";
 import {ReturnStatement} from "./returnStatement.mjs";
 import {ReplaceSingleQuotes} from "./textStatement.mjs";
+import {parse} from "csv-parse/sync";
 
 export default class MenuDecision extends StatementBlock {
     static matcher = /"\\"([^\\]+)\\"/;
@@ -33,18 +34,28 @@ export default class MenuDecision extends StatementBlock {
     }
 
     GetMenuText() {
-
-        let exec = MenuDecision.matcher.exec(this.Line);
-        if (exec) {
-
-            return exec[1]
+        let parser;
+        if (this.Line.indexOf('|') >= 0) {
+            return this.Line.split("|").at(-1).slice(0, -2);
+        }
+        try {
+            parser = parse(this.Line.trim().slice(0, -1), {
+                record_delimiter: ' ', escape: '\\'
+            }).map(a => a[0]);
+            if (parser) {
+                return parser[0]
+            }
+        } catch (e) {
+            console.log(this.Line)
+                throw e;
         }
 
-        return this.Line.split("|").at(-1).slice(0, -2);
+        return "???????NOTFOUND???????????"
+
     }
 
     GetMenuTextAsClassName() {
-        return ReplaceSingleQuotes (this.GetMenuText().replace(/[^A-Za-z]/g, '').toUpperCase())
+        return ReplaceSingleQuotes(this.GetMenuText().replace(/[^A-Za-z]/g, '').toUpperCase())
     }
 
     AddReturn = false;
@@ -67,15 +78,15 @@ export default class MenuDecision extends StatementBlock {
         while (label_node.Depth > 0) {
             label_node = label_node.parent;
         }
-        let labelStatement = new LabelStatement({Line: "label " + this.GetMenuText(), Depth: 0}, root_node);
+        let labelStatement = new LabelStatement({Line: "label " + this.GetMenuTextAsClassName(), Depth: 0}, root_node);
         label_node.AdditionalLabels.push(labelStatement)
         labelStatement.Statements = this.Statements;
-   //     root_node.Statements.push(labelStatement)
+        //     root_node.Statements.push(labelStatement)
     }
 
     ConvertToJavascript() {
 
-        return `new MenuDecision('${ReplaceSingleQuotes(this.GetMenuTextAsClassName())}', ${this.GetMenuText()})`
+        return `new MenuDecision('${ReplaceSingleQuotes(this.GetMenuText())}', ${this.GetMenuTextAsClassName()}())`
     }
 }
 
