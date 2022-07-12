@@ -18,6 +18,7 @@ import {MenuStatement} from "./menuStatement.mjs";
 import {ElseStatement} from "./elseStatement.mjs";
 import {ReturnStatement} from "./returnStatement.mjs";
 import {IfStatement} from "./ifStatemeant.mjs";
+import {VariableAssignmentStatement} from "./variableAssignmentStatement.mjs";
 
 
 export default function parseStatement(parsed_lines, i,parent) {
@@ -29,6 +30,7 @@ export default function parseStatement(parsed_lines, i,parent) {
     let line = parsedLine.Line;
 
     const trimmed_line = lowerCase(line);
+
     if (trimmed_line.startsWith("label")) {
 
         let conversationFunction = new LabelStatement(parsedLine,parent);
@@ -92,6 +94,10 @@ export default function parseStatement(parsed_lines, i,parent) {
     if (trimmed_line.startsWith('$') && trimmed_line.indexOf('(') >= 0) {
         let avatarStatement = new AvatarStatement(parsedLine,parent);
         return {j: i + 1, statement: avatarStatement}
+    }
+    if (trimmed_line.startsWith('$')  ) {
+        let variableAssignmentStatement = new VariableAssignmentStatement(parsedLine,parent);
+        return {j: i + 1, statement: variableAssignmentStatement}
     }
     if(parent instanceof MenuStatement){
         let menuDecision = new MenuDecision(parsedLine,parent);

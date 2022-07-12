@@ -5,6 +5,6 @@ export class MenuStatement extends StatementBlock {
         super.ConvertToJavascript();
         let params = this.Statements.map(a => a.ConvertToJavascript());
         let params_delimit_string = params.join(',');
-        return `new Menu([${params_delimit_string}])`
+        return `await new Choices([${params_delimit_string}])`
     }
 }

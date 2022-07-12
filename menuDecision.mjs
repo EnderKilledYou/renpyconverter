@@ -47,7 +47,7 @@ export default class MenuDecision extends StatementBlock {
             }
         } catch (e) {
             console.log(this.Line)
-                throw e;
+            throw e;
         }
 
         return "???????NOTFOUND???????????"
@@ -64,20 +64,13 @@ export default class MenuDecision extends StatementBlock {
         super.PreProcess();
 
         const ReturnStatements = this.Statements.filter(a => a instanceof ReturnStatement);
-        if (ReturnStatements.length === 1) { //if there are return statements more than one and not the last one then don't refractor
-            if (!(this.Statements.at(-1) instanceof ReturnStatement)) {
-                return;
-            }
+        for (const returnStatement of ReturnStatements) {
+            returnStatement.Refractored = true; //sets it to set return statements to throw instead of just return;
         }
         //refractor out into new function/helper file
-        let root_node = this.parent;
-        let label_node = this.parent;
-        while (root_node.parent !== null) {
-            root_node = root_node.parent;
-        }
-        while (label_node.Depth > 0) {
-            label_node = label_node.parent;
-        }
+
+        const root_node = this.GetRootNode()
+        const label_node = this.GetLabelNode();
         let labelStatement = new LabelStatement({Line: "label " + this.GetMenuTextAsClassName(), Depth: 0}, root_node);
         label_node.AdditionalLabels.push(labelStatement)
         labelStatement.Statements = this.Statements;
