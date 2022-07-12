@@ -1,7 +1,7 @@
 import Statement from "./statement.mjs";
 import {parse} from "csv-parse/sync";
 
-export class ShowStatement extends Statement {
+export class XposStatement extends Statement {
     ConvertToJavascript() {
         const base = super.ConvertToJavascript();
         return "// soon " + this.Line.trim();
@@ -38,6 +38,6 @@ export class ShowStatement extends Statement {
             return `convo.Pose('${this.Sprite}','${this.Frame}');`
         }
 
-               return "// soon " + this.Line.trim();
+        return "// soon " + this.Line.trim();
     }
 }
