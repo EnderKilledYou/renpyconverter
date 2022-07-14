@@ -1,9 +1,10 @@
-import Statement from "./statement.mjs";
-import {parse} from "csv-parse/sync";
-import {RenPyLineStatement} from "./renPyLineStatement.mjs";
 import {ReplaceSingleQuotes} from "./textStatement.mjs";
+import {RenPyLineStatement} from "./renPyLineStatement.mjs";
 
-export class ShowStatement extends RenPyLineStatement {
+
+export class HideStatement extends RenPyLineStatement {
+
+
     ConvertToJavascript() {
 
         let convoCall = `convo.Hide('${ReplaceSingleQuotes(this.Target)})`;
