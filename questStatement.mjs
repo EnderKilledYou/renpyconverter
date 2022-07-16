@@ -4,8 +4,9 @@ export class QuestStatement extends Statement {
 
     ConvertToJavascript() {
         super.ConvertToJavascript();
-        if (this.Line.match(/start\(\)/)) {
-            const quest = this.Line.trim().split('.').at(1)
+        const line = this.Line.Variable + ' ' + this.Line.Variables.map(a=>a.Variable).join(" ");
+        if (line.match(/start\(\)/)) {
+            const quest = line.trim().split('.').at(1)
             return `StartQuest(convo.Scene,"${quest}");`
         }
     }

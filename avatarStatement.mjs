@@ -3,7 +3,8 @@ import Statement from "./statement.mjs";
 export class AvatarStatement extends Statement {
     ConvertToJavascript() {
         super.ConvertToJavascript();
-        const trim = this.Line.trim();
+        const line = this.Line.Variable + ' ' + this.Line.Variables.map(a=>a.Variable).join(" ");
+        const trim = line.trim();
         const pieces = trim.slice(1).split('.');
         const avatar = PascalCase(pieces[0]);
         let function_args_between_parens = trim.slice(trim.indexOf('(') + 1).slice(0, -1);

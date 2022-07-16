@@ -1,7 +1,7 @@
-import RenPyLine from "../renPyLine.mjs";
-import {HideStatement} from "../hideStatement.mjs";
-import {ShowStatement} from "../showStatement.mjs";
-import {IfStatement} from "../ifStatemeant.mjs";
+import RenPyLine from "./renPyLine.mjs";
+import {HideStatement} from "./hideStatement.mjs";
+import {ShowStatement} from "./showStatement.mjs";
+import {IfStatement} from "./ifStatemeant.mjs";
 
 
 //let renPyLine = RenPyLine("hide",`jacklyn with Dissolve(.5)`.split(" "));
@@ -17,7 +17,7 @@ import {IfStatement} from "../ifStatemeant.mjs";
 
 // pyLine = RenPyLine("show","jacklyn neutral at move_to(.5)".split(" "));
 // console.log(pyLine)
-// console.log(new ShowStatement(pyLine,null).ConvertToJavascript())
+ console.log(new ShowStatement(pyLine,null).ConvertToJavascript())
 
 
 // pyLine = RenPyLine("show","jo sad at appear_from_left(.5)".split(" "));

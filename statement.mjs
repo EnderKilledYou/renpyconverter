@@ -6,6 +6,7 @@ export default class Statement {
      */
     constructor(parsedLine, parent) {
         this.Line = parsedLine;
+        this.Depth = parsedLine.Depth;
         this.parent = parent;
 
     }

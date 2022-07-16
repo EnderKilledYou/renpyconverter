@@ -4,7 +4,8 @@ import {ReplaceSingleQuotes} from "./textStatement.mjs";
 export class VariableAssignmentStatement extends Statement {
     ConvertToJavascript() {
         super.ConvertToJavascript();
-        let pieces = this.Line.trim().split('-=');
+        const line = this.Line.Variable + ' ' + this.Line.Variables.map(a=>a.Variable).join(" ");
+        let pieces = line.trim().split('-=');
 
         if (pieces.length === 2) {
 
@@ -13,7 +14,7 @@ export class VariableAssignmentStatement extends Statement {
 
 
         }
-        pieces = this.Line.trim().split('+=');
+        pieces = line.trim().split('+=');
         if (pieces.length === 2) {
 
             return `Increment('${ReplaceSingleQuotes(pieces[0].slice(1))}',${pieces[1]})`

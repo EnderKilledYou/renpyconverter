@@ -5,7 +5,7 @@ export class LabelStatement extends StatementBlock {
         super(parsedLine, parent)
     }
     GetLabelName() {
-        return this.Variables[0].Variable
+        return this.Line.Variables[0].Variable.replace(/:/,'')
     }
 
     AdditionalLabels = []

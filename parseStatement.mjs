@@ -31,15 +31,18 @@ export default function parseStatement(parsed_lines, i, parent) {
         debugger
     }
     const trimmed_line = parsedLine.Line.trim();
+    const pieces = trimmed_line.split(" ")
+    const name = pieces.shift();
+    let renPyLine = new RenPyLine(name, pieces)
+    renPyLine.Depth = parsedLine.Depth
     if (trimmed_line.startsWith('"?') || trimmed_line.startsWith('"\\"')) {
-        let menuDecision = new MenuDecision(parsedLine, parent);
+        let menuDecision = new MenuDecision(renPyLine, parent);
 
         i = menuDecision.parseMethodStatements(parsed_lines, i + 1);
         return {j: i, statement: menuDecision}
     }
-    const pieces = trimmed_line.split(" ")
-    const name = pieces.shift();
-    let renPyLine = new RenPyLine(name, pieces)
+
+
     let statement;
     switch (name.toLowerCase()) {
         case "label":
@@ -90,7 +93,7 @@ export default function parseStatement(parsed_lines, i, parent) {
         return {j: i + 1, statement: questStatement}
     }
     if (trimmed_line.startsWith('$') && trimmed_line.indexOf('(') >= 0) {
-        let avatarStatement = new AvatarStatement(parsedLine, parent);
+        let avatarStatement = new AvatarStatement(renPyLine, parent);
         return {j: i + 1, statement: avatarStatement}
     }
 

@@ -4,8 +4,9 @@ import {parse} from "csv-parse/sync";
 export class TextStatement extends Statement {
     ConvertToJavascript() {
         super.ConvertToJavascript();
+        const line = this.Line.Variable + ' ' + this.Line.Variables.map(a=>a.Variable).join(" ");
         try {
-            const parser = parse(this.Line.trim(), {
+            const parser = parse(line.trim(), {
                     record_delimiter: ' ', escape: '\\'
                 }
             ).map(a => ReplaceSingleQuotes(a[0]));
@@ -20,10 +21,10 @@ export class TextStatement extends Statement {
                  await  convo.Pose('${parser[0]}','${parser[1]}');` + `
                  await  convo.Say('${parser[0]}','${parser[2]}');`
             }
-            return this.Line.trim();
+            return line.trim();
 
         } catch (e) {
-            console.log(this.Line.trim())
+            console.log(line.trim())
         }
     }
 }

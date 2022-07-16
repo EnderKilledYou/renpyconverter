@@ -12,7 +12,7 @@ export class RenPyLineStatement extends Statement {
 
     PreProcess() {
         super.PreProcess();
-        const line = this.Line.trim()
+        const line = this.Line.Variable.trim()
 
         const pieces = line.split(/\s+/);
         const functionName = pieces.shift();

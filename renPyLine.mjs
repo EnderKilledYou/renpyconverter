@@ -67,7 +67,7 @@ export class Variable {
 }
 
 export class Parens extends  Variable{
-
+    Depth=0
     Variables = []
     text = '';
     constructor(text) {
