@@ -1,4 +1,4 @@
-import {StatementBlock} from "./statementBlock.mjs";
+import StatementBlock from "./statementBlock.mjs";
 import {LabelStatement} from "./labelStatement.mjs";
 import {ReturnStatement} from "./returnStatement.mjs";
 import {ReplaceSingleQuotes} from "./textStatement.mjs";

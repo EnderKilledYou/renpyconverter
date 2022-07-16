@@ -21,6 +21,7 @@ import {IfStatement} from "./ifStatemeant.mjs";
 import {VariableAssignmentStatement} from "./variableAssignmentStatement.mjs";
 import {XposStatement} from "./xposStatement.mjs";
 import {HideStatement} from "./hideStatement.mjs";
+import RenPyLine from "./renPyLine.mjs";
 
 
 export default function parseStatement(parsed_lines, i, parent) {
@@ -29,91 +30,79 @@ export default function parseStatement(parsed_lines, i, parent) {
     if (!parsedLine) {
         debugger
     }
-    let line = parsedLine.Line;
-
-    const trimmed_line = lowerCase(line);
-
-    if (trimmed_line.startsWith("label")) {
-
-        let conversationFunction = new LabelStatement(parsedLine, parent);
-        i = conversationFunction.parseMethodStatements(parsed_lines, i + 1);
-        return {j: i, statement: conversationFunction}
-    }
-    if (trimmed_line.startsWith("menu")) {
-        let menuStatement = new MenuStatement(parsedLine, parent);
-
-        i = menuStatement.parseMethodStatements(parsed_lines, i + 1);
-        return {j: i, statement: menuStatement}
-    }
-    if (trimmed_line.startsWith("elif")) {
-        let elIfStatement = new ElIfStatement(parsedLine, parent);
-
-        i = elIfStatement.parseMethodStatements(parsed_lines, i + 1);
-        return {j: i, statement: elIfStatement}
-    }
-    if (trimmed_line.startsWith("if")) {
-        let menuStatement = new IfStatement(parsedLine, parent);
-
-        i = menuStatement.parseMethodStatements(parsed_lines, i + 1);
-        return {j: i, statement: menuStatement}
-    }
-    if (trimmed_line.startsWith("else")) {
-        let menuStatement = new ElseStatement(parsedLine, parent);
-
-        i = menuStatement.parseMethodStatements(parsed_lines, i + 1);
-        return {j: i, statement: menuStatement}
-    }
+    const trimmed_line = parsedLine.Line.trim();
     if (trimmed_line.startsWith('"?') || trimmed_line.startsWith('"\\"')) {
         let menuDecision = new MenuDecision(parsedLine, parent);
 
         i = menuDecision.parseMethodStatements(parsed_lines, i + 1);
         return {j: i, statement: menuDecision}
     }
+    const pieces = trimmed_line.split(" ")
+    const name = pieces.shift();
+    let renPyLine = new RenPyLine(name, pieces)
+    let statement;
+    switch (name.toLowerCase()) {
+        case "label":
+            statement = new LabelStatement(renPyLine, parent);
+            i = statement.parseMethodStatements(parsed_lines, i + 1);
+            return {j: i, statement: statement}
+        case "menu":
+            statement = new MenuStatement(renPyLine, parent);
+            i = statement.parseMethodStatements(parsed_lines, i + 1);
+            return {j: i, statement: statement}
+        case "elif":
+            statement = new ElIfStatement(renPyLine, parent);
+            i = statement.parseMethodStatements(parsed_lines, i + 1);
+            return {j: i, statement: statement}
+        case "if":
+            statement = new IfStatement(renPyLine, parent);
+            i = statement.parseMethodStatements(parsed_lines, i + 1);
+            return {j: i, statement: statement}
+        case "else":
+            statement = new ElseStatement(renPyLine, parent);
+            i = statement.parseMethodStatements(parsed_lines, i + 1);
+            return {j: i, statement: statement}
+        case "extend":
+            let extendStatement = new ExtendStatement(renPyLine, parent);
+            return parseStatement(parsed_lines, i + 1, parent)
+        case "pause":
+            let pauseStatement = new PauseStatement(renPyLine, parent);
+            return {j: i + 1, statement: pauseStatement}
 
 
-    if (trimmed_line.startsWith('return')) {
-        let returnStatement = new ReturnStatement(parsedLine, parent);
-        return {j: i + 1, statement: returnStatement}
-    }
-    if (trimmed_line.startsWith('show')) {
-        let showStatement = new ShowStatement(parsedLine, parent);
-        return {j: i + 1, statement: showStatement}
-    }
-    if (trimmed_line.startsWith('extend')) {
-        let extendStatement = new ExtendStatement(parsedLine, parent);
-        return parseStatement(parsed_lines, i + 1, parent)
+        case "hide":
+            let hideStatement = new HideStatement(renPyLine, parent);
+            return {j: i + 1, statement: hideStatement}
+
+        case "xpos":
+            let xposStatement = new XposStatement(renPyLine, parent);
+            return {j: i + 1, statement: xposStatement}
+
+        case "return":
+            let returnStatement = new ReturnStatement(renPyLine, parent);
+            return {j: i + 1, statement: returnStatement}
 
     }
-    if (trimmed_line.startsWith('pause')) {
-        let pauseStatement = new PauseStatement(parsedLine, parent);
-        return {j: i + 1, statement: pauseStatement}
 
-    }
+
     if (trimmed_line.startsWith('$quest')) {
-        let questStatement = new QuestStatement(parsedLine, parent);
+        let questStatement = new QuestStatement(renPyLine, parent);
         return {j: i + 1, statement: questStatement}
     }
     if (trimmed_line.startsWith('$') && trimmed_line.indexOf('(') >= 0) {
         let avatarStatement = new AvatarStatement(parsedLine, parent);
         return {j: i + 1, statement: avatarStatement}
     }
-    if (trimmed_line.startsWith('hide')) {
-        let hideStatement = new HideStatement(parsedLine, parent);
-        return {j: i + 1, statement: hideStatement}
-    }
-    if (trimmed_line.startsWith('xpos')) {
-        let xposStatement = new XposStatement(parsedLine, parent);
-        return {j: i + 1, statement: xposStatement}
-    }
+
     if (trimmed_line.startsWith('$')) {
-        let variableAssignmentStatement = new VariableAssignmentStatement(parsedLine, parent);
+        let variableAssignmentStatement = new VariableAssignmentStatement(renPyLine, parent);
         return {j: i + 1, statement: variableAssignmentStatement}
     }
     if (parent instanceof MenuStatement) {
-        let menuDecision = new MenuDecision(parsedLine, parent);
+        let menuDecision = new MenuDecision(renPyLine, parent);
 
         i = menuDecision.parseMethodStatements(parsed_lines, i + 1);
         return {j: i, statement: menuDecision}
     }
-    return {j: i + 1, statement: new TextStatement(parsedLine, parent)}
+    return {j: i + 1, statement: new TextStatement(renPyLine, parent)}
 }

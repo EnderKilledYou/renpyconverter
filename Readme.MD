@@ -13,7 +13,6 @@ import parseStatement from "./parseStatement.mjs";
 import Convert2 from "./convert2.js";
 
 import fs from "fs";
-import {RpyFile} from "./statementBlock.mjs";
 
 
 const data = fs.readFileSync('./test.yaml', 'utf-8')
@@ -55,3 +54,13 @@ for (let statement of ast.Statements) {
 
 and print it some where. call preprocess because I like to refractor shit out. don't call it to have hob flob code all
 nimbly wimbly in there stacked like your hentai harem's tiddy stat.
+
+
+```javascript
+
+const pyLine = RenPyLine("if",`not quest.isabelle_stolen["hold_your_horse_dick"] or (quest.isabelle_stolen["hold_your_horse_dick"] and not quest.isabelle_stolen["help_with_the_project"])`.split(" "))
+console.log(pyLine)
+console.log(new IfStatement(pyLine,null).ConvertToJavascript())
+
+// lexer example
+```

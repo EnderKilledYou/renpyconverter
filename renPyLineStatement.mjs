@@ -3,6 +3,9 @@ import {BadCommandError} from "./badCommandError.mjs";
 import {DissolveEffect} from "./dissolveEffect.mjs";
 
 export class RenPyLineStatement extends Statement {
+    constructor(renpy,parent) {
+        super(renpy,parent);
+    }
     Target = false
     Emotion = false;
     AppearLocation = false;

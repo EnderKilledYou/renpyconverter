@@ -10,15 +10,15 @@ export class TextStatement extends Statement {
                 }
             ).map(a => ReplaceSingleQuotes(a[0]));
             if (parser.length === 1) {
-                return `convo.Say('Narrator','${parser[0]}');`
+                return `await convo.Say('Narrator','${parser[0]}');`
             }
             if (parser.length === 2) {
-                return `convo.Say('${parser[0]}','${parser[1]}');`
+                return `await convo.Say('${parser[0]}','${parser[1]}');`
             }
             if (parser.length === 3) {
                 return `
-                 convo.Pose('${parser[0]}','${parser[1]}');` + `
-                 convo.Say('${parser[0]}','${parser[2]}');`
+                 await  convo.Pose('${parser[0]}','${parser[1]}');` + `
+                 await  convo.Say('${parser[0]}','${parser[2]}');`
             }
             return this.Line.trim();
 

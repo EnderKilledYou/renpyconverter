@@ -1,4 +1,4 @@
-import {StatementBlock} from "./statementBlock.mjs";
+import StatementBlock from "./statementBlock.mjs";
 
 export class MenuStatement extends StatementBlock {
     ConvertToJavascript() {

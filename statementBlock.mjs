@@ -1,7 +1,7 @@
 import Statement from "./statement.mjs";
 import parseStatement from "./parseStatement.mjs";
 
-export class StatementBlock extends Statement {
+export default class StatementBlock extends Statement {
     constructor(parsedLine, parent) {
         super(parsedLine, parent)
         this.Statements = []
@@ -27,6 +27,3 @@ export class StatementBlock extends Statement {
     }
 }
 
-export class RpyFile extends StatementBlock {
-
-}

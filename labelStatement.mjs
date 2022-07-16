@@ -1,8 +1,11 @@
-import {StatementBlock} from "./statementBlock.mjs";
+import StatementBlock from "./statementBlock.mjs";
 
 export class LabelStatement extends StatementBlock {
+    constructor(parsedLine, parent) {
+        super(parsedLine, parent)
+    }
     GetLabelName() {
-        return this.Line.split(/\s+/).at(1).split(":").at(0)
+        return this.Variables[0].Variable
     }
 
     AdditionalLabels = []
