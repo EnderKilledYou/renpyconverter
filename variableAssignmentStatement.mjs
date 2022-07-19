@@ -9,7 +9,8 @@ export class VariableAssignmentStatement extends Statement {
 
         if (pieces.length === 2) {
 
-                    return `DecrementSetting('${ReplaceSingleQuotes(pieces[0].slice(1))}',${pieces[1]})`
+                    return `DecrementSetting('${ReplaceSingleQuotes(pieces[0].slice(1))}',${pieces[1]})
+                    `
 
 
 
@@ -17,7 +18,8 @@ export class VariableAssignmentStatement extends Statement {
         pieces = line.trim().split('+=');
         if (pieces.length === 2) {
 
-            return `Increment('${ReplaceSingleQuotes(pieces[0].slice(1))}',${pieces[1]})`
+            return `Increment('${ReplaceSingleQuotes(pieces[0].slice(1))}',${pieces[1]})
+            `
 
 
 

@@ -5,7 +5,7 @@ export default function RenPyLine(name,pieces) {
     let parts = [];
     let parens = new Parens(name);
     ParensStep(0, pieces, parens);
-    console.log(parens)
+
     return parens;
     if (parts.length > 0) {
         this.Command = parts[0];
@@ -17,7 +17,7 @@ function ParensStep(parensCount, pieces, parens) {
     if (pieces.length === 0) {
         return parens;
     }
-    console.log(parensCount);
+
     const parensPiece = pieces.shift();
     const openPieceIndex = parensPiece.indexOf('(');
     const closePieceIndex = parensPiece.indexOf(')');
@@ -38,7 +38,7 @@ function ParensStep(parensCount, pieces, parens) {
     } else if (closePieceIndex >= 0) {
         parensCount--;
         const beforeParens = parensPiece.slice(0, closePieceIndex);
-        console.log(beforeParens)
+
         const afterParens = parensPiece.slice(closePieceIndex + 1);
         pieces.unshift(afterParens);
         if(beforeParens.trim().length >0)

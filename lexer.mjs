@@ -22,15 +22,16 @@ import {VariableAssignmentStatement} from "./variableAssignmentStatement.mjs";
 import {XposStatement} from "./xposStatement.mjs";
 import {HideStatement} from "./hideStatement.mjs";
 import RenPyLine from "./renPyLine.mjs";
+import {JumpStatement} from "./jumpStatement.mjs";
 
 
-export default function parseStatement(parsed_lines, i, parent) {
+export default function Lexer(parsed_lines, i, parent) {
 
     let parsedLine = parsed_lines[i];
     if (!parsedLine) {
         debugger
     }
-    const trimmed_line = parsedLine.Line.trim();
+    const trimmed_line = parsedLine.Line.trim().replace(/:\s*$/,'');
     const pieces = trimmed_line.split(" ")
     const name = pieces.shift();
     let renPyLine = new RenPyLine(name, pieces)
@@ -41,18 +42,23 @@ export default function parseStatement(parsed_lines, i, parent) {
         i = menuDecision.parseMethodStatements(parsed_lines, i + 1);
         return {j: i, statement: menuDecision}
     }
-
-
     let statement;
+    if (trimmed_line.startsWith("menu")) {
+
+        statement = new MenuStatement(renPyLine, parent);
+        i = statement.parseMethodStatements(parsed_lines, i + 1);
+        return {j: i, statement: statement}
+    }
+
     switch (name.toLowerCase()) {
         case "label":
             statement = new LabelStatement(renPyLine, parent);
             i = statement.parseMethodStatements(parsed_lines, i + 1);
             return {j: i, statement: statement}
-        case "menu":
-            statement = new MenuStatement(renPyLine, parent);
-            i = statement.parseMethodStatements(parsed_lines, i + 1);
-            return {j: i, statement: statement}
+        case "jump":
+            statement = new JumpStatement(renPyLine, parent);
+
+            return {j: i+1, statement: statement}
         case "elif":
             statement = new ElIfStatement(renPyLine, parent);
             i = statement.parseMethodStatements(parsed_lines, i + 1);
@@ -67,12 +73,14 @@ export default function parseStatement(parsed_lines, i, parent) {
             return {j: i, statement: statement}
         case "extend":
             let extendStatement = new ExtendStatement(renPyLine, parent);
-            return parseStatement(parsed_lines, i + 1, parent)
+            return Lexer(parsed_lines, i + 1, parent)
         case "pause":
             let pauseStatement = new PauseStatement(renPyLine, parent);
             return {j: i + 1, statement: pauseStatement}
 
-
+        case "show":
+            let showStatement = new ShowStatement(renPyLine, parent);
+            return {j: i + 1, statement: showStatement}
         case "hide":
             let hideStatement = new HideStatement(renPyLine, parent);
             return {j: i + 1, statement: hideStatement}

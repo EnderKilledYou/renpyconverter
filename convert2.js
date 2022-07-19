@@ -13,7 +13,7 @@ module.exports= class Convert2 {
 
     DepthLines = []
 
-    ParseLine() {
+    Tokenize() {
         if (this.index >= this.lines.length) return null;
         const line = this.lines[this.index++].replace(/##.*/g,'');
         let Comment = "";

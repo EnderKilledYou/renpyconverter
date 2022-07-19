@@ -9,7 +9,7 @@ export class ShowStatement extends RenPyLineStatement {
         let showFunction = 'Show'
         let showFunctionExtraArgs = '';
         let MoveTo = '';
-
+        const line = this.Line.Variable + ' ' + this.Line.Variables.map(a => a.Variable).join(" ");
         const pieces = this.Line.Variables.slice();
 
         while (pieces.length > 0) {
@@ -42,19 +42,9 @@ export class ShowStatement extends RenPyLineStatement {
         }
         if (showList.length === 0) return "// Show error nothing to show";
         let avi_qoted = ReplaceSingleQuotes(showList[0].Variable);
-        let RenderedItem = `
-        await convo.Show('${avi_qoted}','${showFunction}')`;
-        if(showFunctionExtraArgs.length>0){
-            RenderedItem = `await convo.Show('${avi_qoted}','${showFunction}',${showFunctionExtraArgs})`;
-        }
-        const ShowListRendered = showList.slice(1).map(a => {
-            return `
-            await convo.Pose('${avi_qoted}','${ReplaceSingleQuotes(a.Variable)}')
-            `
 
-        }).join("\n");
 
-        return ShowListRendered + RenderedItem
+        return `await convo.Show('${avi_qoted}',  ${showFunctionExtraArgs})`;
 
 
     }

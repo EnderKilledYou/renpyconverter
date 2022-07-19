@@ -42,7 +42,7 @@ export default class MenuDecision extends StatementBlock {
             return line.split("|").at(-1).slice(0, -2);
         }
         try {
-            parser = parse(line.trim().slice(0, -1), {
+            parser = parse(line.trim() , {
                 record_delimiter: ' ', escape: '\\'
             }).map(a => a[0]);
             if (parser) {
@@ -74,10 +74,10 @@ export default class MenuDecision extends StatementBlock {
 
         const root_node = this.GetRootNode()
         const label_node = this.GetLabelNode();
-       let labelStatement = new LabelStatement({Variable: "label",Variables:[new Variable(this.GetMenuTextAsClassName())], Depth: 0}, root_node);
+       let labelStatement = new LabelStatement({Variable: "label",Variables:[new Variable(this.GetMenuTextAsClassName())], Depth: this.Depth}, label_node);
          label_node.AdditionalLabels.push(labelStatement)
          labelStatement.Statements = this.Statements;
-            root_node.Statements.push(labelStatement)
+
     }
 
     ConvertToJavascript() {

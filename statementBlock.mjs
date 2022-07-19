@@ -1,5 +1,5 @@
 import Statement from "./statement.mjs";
-import parseStatement from "./parseStatement.mjs";
+import Lexer from "./lexer.mjs";
 
 export default class StatementBlock extends Statement {
     constructor(parsedLine, parent) {
@@ -18,7 +18,7 @@ export default class StatementBlock extends Statement {
 
     parseMethodStatements(lines, i) {
         while (lines[i] && lines[i].Depth > this.Depth) {
-            let {j, statement} = parseStatement(lines, i, this);
+            let {j, statement} = Lexer(lines, i, this);
             this.Statements.push(statement);
             i = j;
         }

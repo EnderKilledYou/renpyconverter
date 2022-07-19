@@ -11,7 +11,7 @@ export class HideStatement extends RenPyLineStatement {
     ConvertToJavascript() {
         const HideList = []
         let HideFunction = ''
-        let HideFunctionExtraArgs = '';
+        let HideFunctionExtraArgs = ',';
         let MoveTo = '';
 
         const pieces = this.Line.Variables.slice();
@@ -46,19 +46,8 @@ export class HideStatement extends RenPyLineStatement {
         }
         if (HideList.length === 0) return "// Hide error nothing to Hide";
         let avi_qoted = ReplaceSingleQuotes(HideList[0].Variable);
-        let RenderedItem = `
-        await convo.Hide('${avi_qoted}','${HideFunction}')`;
-        if(HideFunctionExtraArgs.length>0){
-            RenderedItem = `await convo.Hide('${avi_qoted}','${HideFunction}',${HideFunctionExtraArgs})`;
-        }
-        const HideListRendered = HideList.slice(1).map(a => {
-            return `
-            await convo.Pose('${avi_qoted}','${ReplaceSingleQuotes(a.Variable)}')
-            `
 
-        }).join("\n");
-
-        return HideListRendered + RenderedItem
+        return `await convo.Hide('${avi_qoted}'  ${HideFunctionExtraArgs})`;
 
 
     }

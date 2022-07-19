@@ -9,7 +9,7 @@ Most of the time you just stick an rpy in and get a folder full of files back. I
 something that can call Say or Pose or or other renpy-ish proxies. I wrote this to work with my phaser library.
 
 ```javascript
-import parseStatement from "./parseStatement.mjs";
+import Lexer from "./lexer.mjs";
 import Convert2 from "./convert2.js";
 
 import fs from "fs";
@@ -22,7 +22,7 @@ const lines = data.split(/\r?\n/).filter(a => a.trim().length > 0);
 let convert = new Convert2(lines);
 let parsed_lines = [];
 let line;
-while (line = convert.ParseLine()) {
+while (line = convert.Tokenize()) {
 
 
     parsed_lines.push(line);

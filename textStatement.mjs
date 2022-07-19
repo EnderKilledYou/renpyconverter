@@ -10,14 +10,19 @@ export class TextStatement extends Statement {
                     record_delimiter: ' ', escape: '\\'
                 }
             ).map(a => ReplaceSingleQuotes(a[0]));
+
             if (parser.length === 1) {
                 return `await convo.Say('Narrator','${parser[0]}');`
             }
             if (parser.length === 2) {
+                if(parser[0] ==="window")
+                    return "//" + line + " \n";
+                    else
                 return `await convo.Say('${parser[0]}','${parser[1]}');`
             }
             if (parser.length === 3) {
                 return `
+                //${line}
                  await  convo.Pose('${parser[0]}','${parser[1]}');` + `
                  await  convo.Say('${parser[0]}','${parser[2]}');`
             }

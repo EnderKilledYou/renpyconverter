@@ -4,7 +4,8 @@ import {parse} from "csv-parse/sync";
 export class XposStatement extends Statement {
     ConvertToJavascript() {
         const base = super.ConvertToJavascript();
-        return "// soon " + this.Line.trim();
+        const line = this.Line.Variable + ' ' + this.Line.Variables.map(a=>a.Variable).join(" ");
+        return "// soon " + line;
         let parser;
         try {
             parser = parse(this.Line.trim(), {
@@ -24,12 +25,16 @@ export class XposStatement extends Statement {
         if (parser.length === 3) {
             this.Sprite = parser[1];
             this.Frame = parser[2];
-            return `convo.Pose('${this.Sprite}','${this.Frame}');`
+            return `
+            convo.Pose('${this.Sprite}','${this.Frame}');
+            `
         } else if (parser.length === 4) {
             this.Sprite = "";
             this.Frame = parser[2];
             this.Effect = parser[3]
-            return `convo.Pose('${this.Sprite}','${this.Frame}');`
+            return `
+            convo.Pose('${this.Sprite}','${this.Frame}');
+            `
         } else if (parser.length > 4) {
             if (parser[3] === "at" || parser[3] === "with")
                 this.Sprite = parser[1];
