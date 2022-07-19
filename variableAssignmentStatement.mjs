@@ -24,6 +24,15 @@ export class VariableAssignmentStatement extends Statement {
 
 
         }
+        pieces = line.trim().split('=');
+        if (pieces.length === 2) {
+
+            return `SetSetting('${ReplaceSingleQuotes(pieces[0].slice(1))}',${pieces[1]})
+            `
+
+
+
+        }
         return "// coming soon " + this.Line
     }
 }

@@ -3,49 +3,54 @@ import {parse} from "csv-parse/sync";
 import {RenPyLineStatement} from "./renPyLineStatement.mjs";
 import {ReplaceSingleQuotes} from "./textStatement.mjs";
 
+function StringAndQuoteArray(pieces) {
+    return pieces.map(ReplaceSingleQuotes).map(a => "'" + a + "'").join(',');
+}
+
 export class ShowStatement extends RenPyLineStatement {
     ConvertToJavascript() {
-        const showList = []
-        let showFunction = 'Show'
-        let showFunctionExtraArgs = '';
-        let MoveTo = '';
         const line = this.Line.Variable + ' ' + this.Line.Variables.map(a => a.Variable).join(" ");
-        const pieces = this.Line.Variables.slice();
-
-        while (pieces.length > 0) {
-            const piece = pieces.shift();
-            switch (piece.Variable) {
-                case "at":
-                    const atVar = pieces.shift();
-                    if (!atVar) continue;
-                    showFunction = atVar.Variable
-                    if (atVar.Variables && atVar.Variables.length !== 0) {
-                        showFunctionExtraArgs = atVar.Variables.map(a => a.ConvertToJavascript()).join(",")
-
-                    }
-                    continue;
-                case "with":
-                    const withVar = pieces.shift();
-                    if (!withVar) continue;
-                    showFunction = withVar.Variable
-                    if (withVar.Variables && withVar.Variables.length !== 0) {
-                        showFunctionExtraArgs = withVar.Variables.map(a => a.ConvertToJavascript()).join(",")
-
-                    }
-                    continue;
-                case "as":
-                    const groupName = pieces.shift()
-                    continue;
-
-            }
-            showList.push(piece);
+        const pieces = this.Line.Variables.slice().map(a=>a.Variable);
+        const atIndex = pieces.indexOf('at');
+        const asIndex = pieces.indexOf('as');
+        const withIndex = pieces.indexOf('with')
+        let withEffect;
+        let atLocation;
+        if(withIndex >=0){
+            pieces.splice(withIndex,1)
+            withEffect = pieces.splice(withIndex,1)[0]
         }
-        if (showList.length === 0) return "// Show error nothing to show";
-        let avi_qoted = ReplaceSingleQuotes(showList[0].Variable);
+        if(atIndex >=0){
+            pieces.splice(atIndex,1)
+            atLocation = pieces.splice(atIndex,1)[0]
+        }
+        if(asIndex >=0) // not yet supported
+        {
+            pieces.splice(asIndex,pieces.length - asIndex);
+        }
+        if (pieces.length === 2) {
+            const actions = StringAndQuoteArray(pieces);
 
+            return `//${line}
+                await convo.Show(${actions})
+            `
+        }
 
-        return `await convo.Show('${avi_qoted}',  ${showFunctionExtraArgs})`;
+        if (pieces.length === 3) {
+            return `
+            //${line}
+            await  convo.Pose('${pieces[0]}','${pieces[1]}'); 
+            await  convo.Say('${pieces[0]}','${pieces[2]}' ); 
+            `
 
+        }
 
+        return  `
+                //parse error
+            //${line} 
+            
+            `
     }
 }
+
+
