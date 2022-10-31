@@ -9,11 +9,10 @@ Most of the time you just stick an rpy in and get a folder full of files back. I
 something that can call Say or Pose or or other renpy-ish proxies. I wrote this to work with my phaser library.
 
 ```javascript
-import parseStatement from "./parseStatement.mjs";
+import Lexer from "./lexer.mjs";
 import Convert2 from "./convert2.js";
 
 import fs from "fs";
-import {RpyFile} from "./statementBlock.mjs";
 
 
 const data = fs.readFileSync('./test.yaml', 'utf-8')
@@ -23,7 +22,7 @@ const lines = data.split(/\r?\n/).filter(a => a.trim().length > 0);
 let convert = new Convert2(lines);
 let parsed_lines = [];
 let line;
-while (line = convert.ParseLine()) {
+while (line = convert.Tokenize()) {
 
 
     parsed_lines.push(line);
@@ -55,3 +54,13 @@ for (let statement of ast.Statements) {
 
 and print it some where. call preprocess because I like to refractor shit out. don't call it to have hob flob code all
 nimbly wimbly in there stacked like your hentai harem's tiddy stat.
+
+
+```javascript
+
+const pyLine = RenPyLine("if",`not quest.isabelle_stolen["hold_your_horse_dick"] or (quest.isabelle_stolen["hold_your_horse_dick"] and not quest.isabelle_stolen["help_with_the_project"])`.split(" "))
+console.log(pyLine)
+console.log(new IfStatement(pyLine,null).ConvertToJavascript())
+
+// lexer example
+```

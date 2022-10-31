@@ -1,8 +1,10 @@
-import {StatementBlock} from "./statementBlock.mjs";
-import {LabelStatement} from "./labelStatement.mjs";
+import StatementBlock from "./statementBlock.mjs";
+
 import {ReturnStatement} from "./returnStatement.mjs";
 import {ReplaceSingleQuotes} from "./textStatement.mjs";
 import {parse} from "csv-parse/sync";
+import {LabelStatement} from "./labelStatement.mjs";
+import {Variable} from "./renPyLine.mjs";
 
 export default class MenuDecision extends StatementBlock {
     static matcher = /"\\"([^\\]+)\\"/;
@@ -35,18 +37,19 @@ export default class MenuDecision extends StatementBlock {
 
     GetMenuText() {
         let parser;
-        if (this.Line.indexOf('|') >= 0) {
-            return this.Line.split("|").at(-1).slice(0, -2);
+        const line = this.Line.Variable + ' ' + this.Line.Variables.map(a=>a.Variable).join(" ");
+        if (line.indexOf('|') >= 0) {
+            return line.split("|").at(-1).slice(0, -2);
         }
         try {
-            parser = parse(this.Line.trim().slice(0, -1), {
+            parser = parse(line.trim() , {
                 record_delimiter: ' ', escape: '\\'
             }).map(a => a[0]);
             if (parser) {
                 return parser[0]
             }
         } catch (e) {
-            console.log(this.Line)
+            console.log(line)
             throw e;
         }
 
@@ -71,15 +74,15 @@ export default class MenuDecision extends StatementBlock {
 
         const root_node = this.GetRootNode()
         const label_node = this.GetLabelNode();
-        let labelStatement = new LabelStatement({Line: "label " + this.GetMenuTextAsClassName(), Depth: 0}, root_node);
-        label_node.AdditionalLabels.push(labelStatement)
-        labelStatement.Statements = this.Statements;
-        //     root_node.Statements.push(labelStatement)
+       let labelStatement = new LabelStatement({Variable: "label",Variables:[new Variable(this.GetMenuTextAsClassName())], Depth: this.Depth}, label_node);
+         label_node.AdditionalLabels.push(labelStatement)
+         labelStatement.Statements = this.Statements;
+
     }
 
     ConvertToJavascript() {
 
-        return `new MenuDecision('${ReplaceSingleQuotes(this.GetMenuText())}', ${this.GetMenuTextAsClassName()}())`
+        return `new MenuDecision('${ReplaceSingleQuotes(this.GetMenuText())}', ${this.GetMenuTextAsClassName()})`
     }
 }
 

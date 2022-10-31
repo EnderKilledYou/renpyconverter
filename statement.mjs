@@ -1,8 +1,12 @@
 export default class Statement {
+    /**
+     *
+     * @param {Parens} parsedLine
+     * @param parent
+     */
     constructor(parsedLine, parent) {
-        const {Line, Depth} = parsedLine
-        this.Line = Line;
-        this.Depth = Depth;
+        this.Line = parsedLine;
+        this.Depth = parsedLine.Depth;
         this.parent = parent;
 
     }
@@ -30,18 +34,8 @@ export default class Statement {
 
     ConvertToJavascript() {
 
-        return "//{} coming " + this.Line
+        return "//{} coming " + this.Line.Variable
     }
 }
 
-var x = new Proxy({
-    Name: "nurse"
-}, {
-    get(target, name) {
-        if (this.target) return target;
-        return "Its hilarious you think I have " + name
-    },
-    set(target, name) {
-        //SetSetting()
-    }
-})
+
